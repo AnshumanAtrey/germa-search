@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Germa Search</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="brand">
+                <img src="icons/126.png" alt="Germa Search" class="logo-icon">
+                <div class="brand-text">
+                    <h1 class="logo">GERMA</h1>
+                    <span class="tagline">PRECISION SEARCH ENGINE</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="settingsBtn" class="settings-btn" title="Settings">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="m12 1 0 6m0 6 0 6"></path>
+                        <path d="m17.5 6.5-3 3m-3 3-3 3"></path>
+                        <path d="m6.5 6.5 3 3m3 3 3 3"></path>
+                    </svg>
+                </button>
+                <a href="https://atrey.dev" target="_blank" class="built-by">
+                    Built by atrey.dev
+                </a>
+            </div>
+        </header>
+        
+        <main class="main">
+            <div class="search-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Enter search query..." autocomplete="off">
+                        <button id="searchBtn" class="search-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="loadingIndicator" class="loading hidden">
+                    <div class="loading-grid">
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                    </div>
+                    <p class="loading-text">GENERATING OPTIMIZED QUERIES</p>
+                </div>
+                
+                <div id="settingsPanel" class="settings-panel hidden">
+                    <div class="settings-header">
+                        <h3 id="settingsTitle">🔑 API KEY REQUIRED</h3>
+                        <button id="closeSettings" class="close-btn" title="Close Settings">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <p id="settingsDescription">Get your free OpenRouter API key to start searching</p>
+                    
+                    <div class="settings-content">
+                        <div class="settings-info">
+                            <div class="info-item">
+                                <span class="info-label">MODEL:</span>
+                                <span class="info-value">Mistral Small 3.2 24B</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">COST:</span>
+                                <span class="info-value">FREE (with OpenRouter credits)</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">PROVIDER:</span>
+                                <span class="info-value">OpenRouter.ai</span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-form">
+                            <div class="current-key-section" id="currentKeySection">
+                                <div class="input-group">
+                                    <label>Current API Key:</label>
+                                    <div class="key-display">
+                                        <span id="maskedKey" class="masked-key">••••••••••••••••••••••••••••••••••••••••</span>
+                                        <button id="toggleKeyVisibility" class="toggle-btn" title="Show/Hide Key">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                <circle cx="12" cy="12" r="3"></circle>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="apiKeyInput">
+                                    <span id="keyInputLabel">OpenRouter API Key:</span>
+                                    <span class="optional-text" id="optionalText">(leave empty to keep current)</span>
+                                </label>
+                                <input type="password" id="apiKeyInput" placeholder="sk-or-v1-..." autocomplete="off">
+                            </div>
+                            
+                            <div class="settings-actions">
+                                <button id="saveApiKey" class="settings-btn primary">
+                                    <span id="saveBtnText">SAVE & START SEARCHING</span>
+                                </button>
+                                <button id="cancelSettings" class="settings-btn secondary">CANCEL</button>
+                                <a href="https://openrouter.ai/" target="_blank" class="settings-link">Get Free API Key →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="searchResults" class="search-results hidden">
+                    <div class="results-header">
+                        <h3>SELECT SEARCH STRATEGY</h3>
+                        <div class="strategy-count">3 STRATEGIES GENERATED</div>
+                    </div>
+                    <div id="queryCards" class="query-grid"></div>
+                </div>
+            </div>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-number">100+</span>
+                    <span class="stat-label">SEARCH OPERATORS</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">AI</span>
+                    <span class="stat-label">POWERED OPTIMIZATION</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">SEARCH STRATEGIES</span>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="system-prompt.js"></script>
+    <script src="api.js"></script>
+    <script src="newtab.js"></script>
+</body>
+</html>

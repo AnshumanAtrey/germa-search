@@ -1,0 +1,15 @@
+{
+  "name": "germa-search",
+  "version": "1.0.0",
+  "description": "AI-powered Google Dorks extension for precise search results",
+  "type": "module",
+  "scripts": {
+    "test": "node dev-test.js",
+    "setup": "node setup-dev.js",
+    "dev": "npm run setup && echo 'Extension ready for development!'",
+    "clean": "node -e \"const fs=require('fs'); const api=fs.readFileSync('api.js','utf8'); fs.writeFileSync('api.js', api.replace(/this\\.developmentApiKey = '[^']*';/, '// this.developmentApiKey = \\'YOUR_KEY_HERE\\';'));\""
+  },
+  "keywords": ["chrome-extension", "search", "google-dorks", "ai"],
+  "author": "Your Name",
+  "license": "MIT"
+}

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Germa Search - Test Suite</title>
+    <style>
+        body {
+            font-family: 'SF Mono', monospace;
+            background: #0A0A0A;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 2rem;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #333;
+        }
+        
+        .logo {
+            color: #FFD700;
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 20px #FFD700;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+        }
+        
+        .test-section {
+            background: #1A1A1A;
+            border: 1px solid #333;
+            border-radius: 2px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .test-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+        }
+        
+        .test-title {
+            color: #FFD700;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: #FFD700;
+            color: #0A0A0A;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            background: #FFA500;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #333;
+            color: #FFF;
+        }
+        
+        .btn-secondary:hover {
+            background: #444;
+        }
+        
+        .test-results {
+            background: #0A0A0A;
+            border: 1px solid #333;
+            border-radius: 2px;
+            padding: 1.5rem;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .test-pass {
+            color: #00FF88;
+        }
+        
+        .test-fail {
+            color: #FF4444;
+        }
+        
+        .test-info {
+            color: #888;
+        }
+        
+        .test-warning {
+            color: #FFA500;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .stat-number {
+            font-size: 1.2rem;
+            font-weight: 900;
+        }
+        
+        .stat-label {
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="header">
+            <div class="logo">GERMA SEARCH TEST SUITE</div>
+            <div class="subtitle">Comprehensive Testing Framework</div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">API Integration Tests</div>
+            <div class="test-controls">
+                <button class="btn" onclick="runApiTests()">Run API Tests</button>
+                <button class="btn btn-secondary" onclick="clearResults('api-results')">Clear</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="api-progress"></div>
+            </div>
+            <div class="test-results" id="api-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">UI Component Tests</div>
+            <div class="test-controls">
+                <button class="btn" onclick="runUiTests()">Run UI Tests</button>
+                <button class="btn btn-secondary" onclick="clearResults('ui-results')">Clear</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="ui-progress"></div>
+            </div>
+            <div class="test-results" id="ui-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">System Prompt Tests</div>
+            <div class="test-controls">
+                <button class="btn" onclick="runPromptTests()">Run Prompt Tests</button>
+                <button class="btn btn-secondary" onclick="clearResults('prompt-results')">Clear</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="prompt-progress"></div>
+            </div>
+            <div class="test-results" id="prompt-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">Integration Tests</div>
+            <div class="test-controls">
+                <button class="btn" onclick="runIntegrationTests()">Run Integration Tests</button>
+                <button class="btn btn-secondary" onclick="clearResults('integration-results')">Clear</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="integration-progress"></div>
+            </div>
+            <div class="test-results" id="integration-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">Performance Tests</div>
+            <div class="test-controls">
+                <button class="btn" onclick="runPerformanceTests()">Run Performance Tests</button>
+                <button class="btn btn-secondary" onclick="clearResults('performance-results')">Clear</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="performance-progress"></div>
+            </div>
+            <div class="test-results" id="performance-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">All Tests</div>
+            <div class="test-controls">
+                <button class="btn" onclick="runAllTests()" style="background: #00FF88;">Run All Tests</button>
+                <button class="btn btn-secondary" onclick="clearAllResults()">Clear All</button>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number test-pass" id="total-pass">0</div>
+                    <div class="stat-label">Passed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number test-fail" id="total-fail">0</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number test-warning" id="total-warn">0</div>
+                    <div class="stat-label">Warnings</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="total-time">0ms</div>
+                    <div class="stat-label">Total Time</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="test-runner.js"></script>
+</body>
+</html>
