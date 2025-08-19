@@ -35,6 +35,8 @@ Thumbs.db
 # Build files
 dist/
 build/
+*.zip
+*.crx
 
 # Test coverage
 coverage/

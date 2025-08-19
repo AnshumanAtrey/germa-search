@@ -4,12 +4,23 @@
   "description": "AI-powered Google Dorks extension for precise search results",
   "type": "module",
   "scripts": {
+    "build": "node build-simple.js",
+    "build:advanced": "node build.js",
+    "build:clean": "rm -rf build dist && npm run build",
     "test": "node dev-test.js",
     "setup": "node setup-dev.js",
     "dev": "npm run setup && echo 'Extension ready for development!'",
-    "clean": "node -e \"const fs=require('fs'); const api=fs.readFileSync('api.js','utf8'); fs.writeFileSync('api.js', api.replace(/this\\.developmentApiKey = '[^']*';/, '// this.developmentApiKey = \\'YOUR_KEY_HERE\\';'));\""
+    "clean": "node -e \"const fs=require('fs'); const api=fs.readFileSync('api.js','utf8'); fs.writeFileSync('api.js', api.replace(/this\\.developmentApiKey = '[^']*';/, '// this.developmentApiKey = \\'YOUR_KEY_HERE\\';'));\"",
+    "package": "npm run build",
+    "release": "npm run build:clean"
   },
   "keywords": ["chrome-extension", "search", "google-dorks", "ai"],
-  "author": "Your Name",
-  "license": "MIT"
+  "author": "atrey.dev",
+  "license": "MIT",
+  "devDependencies": {},
+  "files": [
+    "build/",
+    "dist/",
+    "README.md"
+  ]
 }
