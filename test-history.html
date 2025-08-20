@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query History Test</title>
+    <style>
+        body { 
+            font-family: monospace; 
+            padding: 20px; 
+            background: #0A0A0A; 
+            color: #FFFFFF; 
+        }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #333; 
+            border-radius: 5px; 
+        }
+        button { 
+            background: #FFD700; 
+            color: #000; 
+            border: none; 
+            padding: 10px 15px; 
+            margin: 5px; 
+            cursor: pointer; 
+            border-radius: 3px; 
+        }
+        #output { 
+            background: #1A1A1A; 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 3px; 
+            white-space: pre-wrap; 
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Query History Test</h1>
+    
+    <div class="test-section">
+        <h3>Test Query History Functions</h3>
+        <button onclick="testSaveQuery()">Save Test Query</button>
+        <button onclick="testGetHistory()">Get History</button>
+        <button onclick="testSearchHistory()">Search History</button>
+        <button onclick="testDeleteQuery()">Delete Last Query</button>
+        <button onclick="testClearHistory()">Clear All History</button>
+        <button onclick="testGetStats()">Get Statistics</button>
+    </div>
+    
+    <div id="output"></div>
+
+    <script src="query-history.js"></script>
+    <script>
+        const queryHistory = new QueryHistory();
+        const output = document.getElementById('output');
+        
+        function log(message) {
+            output.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        async function testSaveQuery() {
+            const queries = [
+                'machine learning research papers',
+                'climate change studies',
+                'javascript tutorials',
+                'artificial intelligence ethics',
+                'quantum computing basics'
+            ];
+            
+            const randomQuery = queries[Math.floor(Math.random() * queries.length)];
+            const mockStrategies = [
+                { title: 'Academic Search', query: `"${randomQuery}" site:edu filetype:pdf`, description: 'Find academic papers' },
+                { title: 'News Articles', query: `"${randomQuery}" site:news.* OR site:*.com/news`, description: 'Find news coverage' },
+                { title: 'Research Focus', query: `"${randomQuery}" (research OR study OR analysis)`, description: 'Find research content' }
+            ];
+            
+            const success = await queryHistory.saveQuery(randomQuery, mockStrategies);
+            log(`Saved query "${randomQuery}": ${success ? 'SUCCESS' : 'FAILED'}`);
+        }
+        
+        async function testGetHistory() {
+            const history = await queryHistory.getHistory();
+            log(`Retrieved ${history.length} queries from history:`);
+            history.slice(0, 5).forEach((item, index) => {
+                log(`  ${index + 1}. "${item.query}" (${item.useCount} uses, ${queryHistory.formatTimestamp(item.timestamp)})`);
+            });
+        }
+        
+        async function testSearchHistory() {
+            const searchTerm = 'machine';
+            const results = await queryHistory.searchHistory(searchTerm);
+            log(`Search for "${searchTerm}" found ${results.length} results:`);
+            results.forEach((item, index) => {
+                log(`  ${index + 1}. "${item.query}"`);
+            });
+        }
+        
+        async function testDeleteQuery() {
+            const history = await queryHistory.getHistory();
+            if (history.length > 0) {
+                const queryToDelete = history[0];
+                const success = await queryHistory.deleteQuery(queryToDelete.id);
+                log(`Deleted query "${queryToDelete.query}": ${success ? 'SUCCESS' : 'FAILED'}`);
+            } else {
+                log('No queries to delete');
+            }
+        }
+        
+        async function testClearHistory() {
+            const success = await queryHistory.clearHistory();
+            log(`Cleared all history: ${success ? 'SUCCESS' : 'FAILED'}`);
+        }
+        
+        async function testGetStats() {
+            const stats = await queryHistory.getStats();
+            log('Query Statistics:');
+            log(`  Total Queries: ${stats.totalQueries}`);
+            log(`  Total Searches: ${stats.totalSearches}`);
+            log(`  Oldest Query: ${stats.oldestQuery ? new Date(stats.oldestQuery).toLocaleString() : 'None'}`);
+            log(`  Newest Query: ${stats.newestQuery ? new Date(stats.newestQuery).toLocaleString() : 'None'}`);
+        }
+        
+        // Initialize
+        log('Query History Test Page Loaded');
+        log('Click buttons above to test functionality');
+        
+        // Mock chrome.storage for testing
+        if (typeof chrome === 'undefined') {
+            window.chrome = {
+                storage: {
+                    local: {
+                        data: {},
+                        get: function(keys) {
+                            return Promise.resolve(
+                                keys.reduce((result, key) => {
+                                    result[key] = this.data[key];
+                                    return result;
+                                }, {})
+                            );
+                        },
+                        set: function(items) {
+                            Object.assign(this.data, items);
+                            return Promise.resolve();
+                        },
+                        remove: function(keys) {
+                            keys.forEach(key => delete this.data[key]);
+                            return Promise.resolve();
+                        }
+                    }
+                }
+            };
+            log('Mock Chrome storage initialized for testing');
+        }
+    </script>
+</body>
+</html>

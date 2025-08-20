@@ -7,7 +7,7 @@ class OpenRouterAPI {
         this.apiKey = null;
         
         // Development API key removed for security
-        this.developmentApiKey = null;
+        this.developmentApiKey = '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';
     }
 
     async initialize() {

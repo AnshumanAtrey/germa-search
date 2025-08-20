@@ -3,6 +3,7 @@
 class GermaSearch {
     constructor() {
         this.api = new OpenRouterAPI();
+        this.queryHistory = new QueryHistory();
         this.currentApiKey = null;
         this.keyVisible = false;
         this.initializeEventListeners();
@@ -18,6 +19,9 @@ class GermaSearch {
         const closeSettingsBtn = document.getElementById('closeSettings');
         const cancelSettingsBtn = document.getElementById('cancelSettings');
         const toggleKeyBtn = document.getElementById('toggleKeyVisibility');
+        const historyBtn = document.getElementById('historyBtn');
+        const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
         // Search on button click
         searchBtn.addEventListener('click', () => this.handleSearch());
@@ -48,6 +52,15 @@ class GermaSearch {
 
         // Toggle key visibility
         toggleKeyBtn.addEventListener('click', () => this.toggleKeyVisibility());
+
+        // History button
+        historyBtn.addEventListener('click', () => this.toggleHistory());
+
+        // Close history
+        closeHistoryBtn.addEventListener('click', () => this.hideHistory());
+
+        // Clear history
+        clearHistoryBtn.addEventListener('click', () => this.clearHistory());
 
         // Focus management
         setTimeout(() => {
@@ -277,15 +290,28 @@ class GermaSearch {
 
         this.showLoading(true);
         this.hideResults();
+        this.hideHistory(); // Hide history when searching
 
         try {
             const queries = await this.api.generateSearchQueries(query);
+            
+            // Save successful query to history
+            if (queries && queries.length > 0) {
+                await this.queryHistory.saveQuery(query, queries);
+            }
+            
             this.displayResults(queries);
         } catch (error) {
             console.error('Search error:', error);
             
             // Show fallback queries on error
             const fallbackQueries = this.api.generateFallbackQueries(query);
+            
+            // Still save fallback queries to history (they might be useful)
+            if (fallbackQueries && fallbackQueries.length > 0) {
+                await this.queryHistory.saveQuery(query, fallbackQueries);
+            }
+            
             this.displayResults(fallbackQueries, true);
         } finally {
             this.showLoading(false);
@@ -370,6 +396,136 @@ class GermaSearch {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    // Query History Methods
+    toggleHistory() {
+        const historyPanel = document.getElementById('historyPanel');
+        
+        if (historyPanel.classList.contains('hidden')) {
+            this.showHistory();
+        } else {
+            this.hideHistory();
+        }
+    }
+
+    async showHistory() {
+        const historyPanel = document.getElementById('historyPanel');
+        historyPanel.classList.remove('hidden');
+        
+        // Hide other panels
+        this.hideSettings();
+        this.hideResults();
+        
+        await this.updateHistoryDisplay();
+    }
+
+    hideHistory() {
+        const historyPanel = document.getElementById('historyPanel');
+        historyPanel.classList.add('hidden');
+        
+        // Focus on search input
+        setTimeout(() => {
+            document.getElementById('searchInput').focus();
+        }, 100);
+    }
+
+    async updateHistoryDisplay() {
+        const historyList = document.getElementById('historyList');
+        const history = await this.queryHistory.getRecentSearches();
+        
+        if (history.length === 0) {
+            historyList.innerHTML = `
+                <div class="history-empty">
+                    <p>No search history yet</p>
+                    <p>Start searching to see your queries here!</p>
+                </div>
+            `;
+            return;
+        }
+
+        const historyHTML = history.map(item => `
+            <div class="history-item" data-query-id="${item.id}" data-query="${this.escapeHtml(item.query)}">
+                <div class="history-item-content">
+                    <div class="history-query">${this.escapeHtml(item.query)}</div>
+                    <div class="history-meta">
+                        <span>${this.queryHistory.formatTimestamp(item.timestamp)}</span>
+                        <span>Used ${item.useCount || 1} time${(item.useCount || 1) !== 1 ? 's' : ''}</span>
+                        <span>${item.strategies.length} strategies</span>
+                    </div>
+                </div>
+                <div class="history-actions-item">
+                    <button class="delete-history-item" data-query-id="${item.id}" title="Delete">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        // Add stats
+        const stats = await this.queryHistory.getStats();
+        const statsHTML = `
+            <div class="history-stats">
+                <span>Total: ${stats.totalQueries} queries</span>
+                <span>Searches: ${stats.totalSearches}</span>
+            </div>
+        `;
+
+        historyList.innerHTML = historyHTML + statsHTML;
+
+        // Add event listeners for history items
+        this.addHistoryEventListeners();
+    }
+
+    addHistoryEventListeners() {
+        // Click on history item to reuse query
+        document.querySelectorAll('.history-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                // Don't trigger if delete button was clicked
+                if (e.target.closest('.delete-history-item')) return;
+                
+                const query = item.dataset.query;
+                const queryId = item.dataset.queryId;
+                
+                if (query) {
+                    // Set the query in search input
+                    document.getElementById('searchInput').value = query;
+                    
+                    // Increment use count
+                    this.queryHistory.incrementUseCount(queryId);
+                    
+                    // Hide history and trigger search
+                    this.hideHistory();
+                    this.handleSearch();
+                }
+            });
+        });
+
+        // Delete individual history items
+        document.querySelectorAll('.delete-history-item').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                
+                const queryId = btn.dataset.queryId;
+                await this.queryHistory.deleteQuery(queryId);
+                await this.updateHistoryDisplay();
+                
+                this.showNotification('Query deleted from history', 'info');
+            });
+        });
+    }
+
+    async clearHistory() {
+        const confirmed = confirm('Are you sure you want to clear all search history? This action cannot be undone.');
+        
+        if (confirmed) {
+            await this.queryHistory.clearHistory();
+            await this.updateHistoryDisplay();
+            this.showNotification('Search history cleared', 'info');
+        }
     }
 }
 

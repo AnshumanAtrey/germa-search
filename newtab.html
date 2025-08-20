@@ -42,6 +42,40 @@
                                 <path d="m21 21-4.35-4.35"></path>
                             </svg>
                         </button>
+                        <button id="historyBtn" class="history-btn" title="Search History">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                                <path d="M3 3v5h5"></path>
+                                <path d="M12 7v5l4 2"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Query History Panel -->
+                <div id="historyPanel" class="history-panel hidden">
+                    <div class="history-header">
+                        <h3>🔍 SEARCH HISTORY</h3>
+                        <div class="history-actions">
+                            <button id="clearHistoryBtn" class="clear-history-btn" title="Clear All History">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 6h18"></path>
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                </svg>
+                            </button>
+                            <button id="closeHistoryBtn" class="close-btn" title="Close History">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="history-content">
+                        <div id="historyList" class="history-list">
+                            <!-- History items will be populated here -->
+                        </div>
                     </div>
                 </div>
                 
@@ -147,6 +181,7 @@
     
     <script src="system-prompt.js"></script>
     <script src="api.js"></script>
+    <script src="query-history.js"></script>
     <script src="newtab.js"></script>
 </body>
 </html>

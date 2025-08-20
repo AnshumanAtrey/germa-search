@@ -49,11 +49,47 @@ In today's search landscape dominated by:
 - **Syntax validation** to prevent malformed queries
 - **Quote balancing** and proper escaping
 
+### 📝 **Query History & Management**
+- **Smart history tracking** - saves successful searches automatically
+- **Reuse previous queries** with a single click
+- **Search through history** to find past queries quickly
+- **Usage statistics** showing most-used searches
+- **Duplicate prevention** - avoid cluttered history
+- **Privacy-focused** - all data stored locally in browser
+
 ### 🎨 **Modern Industrial UI**
 - **Dark theme** with yellow accent colors
 - **Smooth animations** and micro-interactions
 - **Responsive design** for all screen sizes
 - **Accessibility compliant** (WCAG standards)
+
+## 🚀 How to Use
+
+### **Basic Search**
+1. **Enter your query** in the search box
+2. **Click search** or press Enter
+3. **Choose from 3 generated strategies** 
+4. **Click any strategy** to open search in new tab
+
+### **Query History Features**
+1. **Click the history button** (🕐) next to the search box
+2. **View your recent searches** with timestamps and usage stats
+3. **Click any previous query** to reuse it instantly
+4. **Delete individual queries** or clear entire history
+5. **Search through history** to find specific past queries
+
+### **Managing Your API Key**
+1. **Click the settings gear** in the top right
+2. **Enter your OpenRouter API key** (get one free at openrouter.ai)
+3. **Save settings** to start generating AI-powered queries
+4. **Toggle key visibility** to verify your key
+
+### **Search Strategy Types**
+- **Academic Search**: Targets educational content, PDFs, research papers
+- **News & Current Events**: Finds recent news coverage and discussions  
+- **Technical Documentation**: Locates official docs, tutorials, guides
+- **Community Discussions**: Surfaces forum posts, Q&A, user experiences
+- **Comprehensive Research**: Broad search across multiple reliable sources
 
 ## 🏗️ Project Architecture
 
