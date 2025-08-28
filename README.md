@@ -2,6 +2,9 @@
 
 > **Bringing back the golden age of search, one dork at a time.** 🔍✨
 
+<details>
+<summary><strong>📖 Expand/Collapse README Content</strong></summary>
+
 <div align="center">
 
 ![Germa Search Interface](thumbnails/1.png)
@@ -441,7 +444,7 @@ const UNIVERSAL_OPERATORS = [
 
 Transform your search experience with AI-powered precision. No more wading through SEO spam and irrelevant results - get exactly what you're looking for, every time.
 
-**[Install Germa Search](https://chrome.google.com/webstore) • [Get API Key](https://openrouter.ai/) • [View Source](https://github.com/your-username/germa-search)**
+**[Install Germa Search](https://chrome.google.com/webstore) • [Get API Key](https://openrouter.ai/) • [View Source](https://github.com/AnshumanAtrey/germa-search)**
 
 *Bringing back the golden age of search, one dork at a time.* 🔍✨
 
@@ -454,3 +457,4 @@ Transform your search experience with AI-powered precision. No more wading throu
 **Experience the future of search today with Germa Search** 🚀
 
 </div>
+</details>
